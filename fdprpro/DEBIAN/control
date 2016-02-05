@@ -1,0 +1,13 @@
+Package: fdprpro
+Version: 5.6.2
+Architecture: ppc64el
+Maintainer: Daniel Kreling <dbkreling@br.ibm.com>
+Installed-Size: 25015
+Depends: libc6 (>= 2.3), libgtk2.0-0
+Section: devel
+Priority: extra
+Description: IBM(R) Feedback Directed Program Restructuring
+ IBM(R) FDPR is a feedback-based post-link optimization tool. It optimizes
+ the executable image of a program by collecting information on the behavior
+ of the program while the program is used for some typical workload, and
+ then creating a new version of the program that is optimized for that workload.

@@ -43,4 +43,4 @@ binary-arch: build
 	dh_builddeb
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
+.PHONY: build binary-indep binary-arch binary

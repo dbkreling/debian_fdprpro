@@ -1,0 +1,47 @@
+#!/bin/sh
+# performs FDPR journal production
+# invocation: fdpr_jour <prog> <arg> ...
+# environment:
+# FDPR_BINDIR - directory containing fdprpro executable and scripts
+# FDPR_SONAME - if present, the shared library to process
+# FDPR_JOUR_FLAGS - journaling options
+# input:
+# <prog> - input program
+# <pro>.prof - profile
+# output:
+# <prog>-jour.xml - journal output
+# returns:
+# status of journal production run
+
+FDPR_HIDDEN=$HOME/.fdpr
+mkdir -p $FDPR_HIDDEN
+
+in=$1
+if [ "$FDPR_SONAME" != "" ]; then in="$FDPR_SONAME"; fi
+if [ "$in" = "" -o ! -r "$in" ]; then echo "fdpr_jour: missing or non-existent input program: $in"; exit 1; fi
+if [ "$FDPR_BINDIR" = "" ]; then FDPR_BINDIR=/opt/ibm/fdprpro/bin; fi
+if [ "$FDPR_JOUR_FLAGS" = "" ]; then 
+  if [ "$FDPR_OPT_FLAGS" = "" ]; then
+    FDPR_JOUR_FLAGS="-O3 -w 2 -q"; 
+  else
+    FDPR_JOUR_FLAGS=$FDPR_OPT_FLAGS
+  fi
+fi
+  
+# retrieve profile from its save area
+saved_prof=$FDPR_HIDDEN/`basename "$in"`.prof
+prof="$in".prof
+view_prof="$prof"
+if [ -r "$saved_prof" ]; then
+    prof="$saved_prof"
+fi
+
+echo $FDPR_BINDIR/fdprpro -a opt "$in" -j "$in"-jour.xml -f "$view_prof" -o "$in"-jour.fdpr $FDPR_JOUR_FLAGS
+$FDPR_BINDIR/fdprpro -a opt "$in" -j "$in"-jour.xml -f "$prof" -o "$in"-jour.fdpr $FDPR_JOUR_FLAGS
+stat=$?
+
+# (YY, 2012/08/09) fix for improper use of </> chars, redundant once fixed fdprpro is out
+perl -i -ape 's/<curfunc>/&lt;curfunc&gt;/; s/<early_exit_condition>/&lt;early_exit_condition&gt;/' "$in"-jour.xml
+
+rm -f "$in"-jour.fdpr
+exit $stat

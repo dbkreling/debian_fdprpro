@@ -1,0 +1,5 @@
+source: source-is-missing bin/fdprpro 
+source: source-is-missing lib/libfdprinst64.so
+
+source: changelog-file-not-compressed changelog
+source: dir-or-file-in-opt opt/ibm/fdprpro/bin/*
