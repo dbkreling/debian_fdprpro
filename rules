@@ -35,7 +35,7 @@ binary-arch: build
 # binary patching, do it here
 #
 	dh_strip
-#	dh_compress
+	dh_compress
 #	dh_makeshlibs
 	dh_installdeb
 	dh_gencontrol
